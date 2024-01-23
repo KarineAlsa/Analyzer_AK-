@@ -2,13 +2,13 @@ const tokens = [
     { category:"Reservated",type: 'Else-Struct', regex: /^else/ },
     { category:"Reservated",type: 'Variable-Type', regex: /^(int|boolean|string)/ },
     //{ type: 'for', regex: /^(int)\s+/ },
+    { category:"Reservated",type: 'Function-declaration', regex: /^func/ },
     { category:"Reservated",type: 'If-Struct', regex: /^if/ },
     { category:"Assignation",type: 'Identificator', regex: /^(?!int\b)(?!string\b)(?!boolean\b)(?!true\b)(?!false\b)[a-zA-Z_]([a-zA-Z0-9_]*)/ },
     //{ type: 'boolean', regex: /^(true|false)+/ },
     { category:"Value",type: 'Number-Content', regex: /^(([1-9][0-9]*)|0)/},
     { category:"Value",type: 'String-content', regex: /^"([\s"a-zA-Z0-9][a-zA-Z0-9_]*)*"/ },
     { category:"Value",type: 'Boolean-value', regex: /^(true|false)+/ },
-    { category:"Reservated",type: 'Function-declaration', regex: /^function/ },
     { category:"Symbol",type: 'Operator-Inc-Dec', regex: /^((\+){2})|((\-){2})/ },
     { category:"Symbol",type: 'Initial-Parentheses', regex: /^\(/ },
     { category:"Symbol",type: 'Final-Parentheses', regex: /^\)/ },
@@ -53,20 +53,50 @@ function tokenize(sourceCode) {
     return tokenizedCode;
 }
 
+function counting(tokenizedCode) {
+    const categoryCount = {};
+
+    for (const token of tokenizedCode) {
+        const category = token.category;
+
+        if (categoryCount[category]) {
+            categoryCount[category]++;
+        } else {
+            categoryCount[category] = 1;
+        }
+    }
+
+    return categoryCount;
+}
 
 function validateString() {
     resultado= document.getElementById('resultado');
     resultado.textContent ="";
     resultado.style.color = '';
     currentTokenIndex = 0;
+    const table = document.querySelector('table tbody');
+
+    table.innerHTML = '';
     const cadena = document.getElementById('variable').value;
     const tokens1 = tokenize(cadena);
    
     //parseProgram(tokens1);
     console.log(tokens1)
     
-    
+    var count = counting(tokens1)
+    console.log(count)
 
+    for (const token of tokens1) {
+        const row = table.insertRow();
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
+        const cell3 = row.insertCell(2);
+
+        // Asigna valores a las celdas
+        cell1.textContent = token.category;
+        cell2.textContent = token.type;
+        cell3.textContent = token.value;
+    }
     
     resultado.textContent =`LISTO.`;
     resultado.style.color = 'Green';

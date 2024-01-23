@@ -108,26 +108,19 @@ button:hover{
     color: rgb(49, 23, 59);
 }  
 table {
-    font-family: arial, sans-serif;
+    width: 60%;
     border-collapse: collapse;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    
-}
-  
-td, th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-}
-  
-tr:nth-child(even) {
-    background-color: #dddddd;
+    margin-top: 20px;
 }
 
-th{
-    text-align: center;
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
 }
 h3{
     font-family: 'Bebas Neue';
@@ -162,6 +155,7 @@ h3{
     
 }
 .container22{
+    margin: 0;
     width: 80%;
     height: 60vh;
     background-color: #fffdfd;
