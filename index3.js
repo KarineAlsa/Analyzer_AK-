@@ -1,6 +1,6 @@
 const tokens = [
     { category:"Reservated",type: 'Else-Struct', regex: /^else/ },
-    { category:"Assignation",type: 'Identificator', regex: /^(?!int\b)(?!string\b)(?!boolean\b)(?!true\b)(?!false\b)[a-zA-Z_]([a-zA-Z0-9_]*)/ },
+    { category:"Assignation",type: 'Identificator', regex: /^(?!int\b)(?!string\b)(?!boolean\b)(?!true\b)(?!false\b)[a-zA-Z]([a-zA-Z0-9_]*)/ },
     { category:"Reservated",type: 'Variable-Type', regex: /^(int|boolean|string)/ },
     { category:"Reservated",type: 'Function-declaration', regex: /^func/ },
     { category:"Reservated",type: 'If-Struct', regex: /^if/ },
@@ -14,11 +14,11 @@ const tokens = [
     { category:"Square-Bracket",type: 'Final-Square-Bracket', regex: /^\}/ },
     { category:"Symbol",type: 'Comma', regex: /^,/ },
     { category:"Symbol",type: 'Semicolon', regex: /^;/ },
-    { category:"Arithmetic",type: 'Plus-Operator', regex: /^(\+){1}/ },
-    { category:"Arithmetic",type: 'Minus-Operator', regex: /^-/ },
-    { category:"Arithmetic",type: 'Asterisk', regex: /^\*/ },
-    { category:"Arithmetic",type: 'Diagonal-Divition', regex: /^\// },
+    { category:"Operator",type: 'Equal-Equal', regex: /^(=){2}/ },
+    { category:"Arithmetic",type: 'Plus-Operator', regex: /^(!){1}/ },
     { category:"Operator",type: 'Equal', regex: /^=/ },
+    { category:"Operator",type: 'More-Equal', regex: /^>=/ },
+    { category:"Operator",type: 'More-Equal', regex: /^<=/ },
     { category:"Operator",type: 'Less-Than', regex: /^</ },
     { category:"Operator",type: 'More-Than', regex: /^>/ },
 ];
