@@ -1,26 +1,26 @@
 const tokens = [
     { category:"Reservated",type: 'Else-Struct', regex: /^else/ },
+    { category:"Assignation",type: 'Identificator', regex: /^(?!int\b)(?!string\b)(?!boolean\b)(?!true\b)(?!false\b)[a-zA-Z_]([a-zA-Z0-9_]*)/ },
     { category:"Reservated",type: 'Variable-Type', regex: /^(int|boolean|string)/ },
-    //{ type: 'for', regex: /^(int)\s+/ },
     { category:"Reservated",type: 'Function-declaration', regex: /^func/ },
     { category:"Reservated",type: 'If-Struct', regex: /^if/ },
-    { category:"Assignation",type: 'Identificator', regex: /^(?!int\b)(?!string\b)(?!boolean\b)(?!true\b)(?!false\b)[a-zA-Z_]([a-zA-Z0-9_]*)/ },
-    //{ type: 'boolean', regex: /^(true|false)+/ },
     { category:"Value",type: 'Number-Content', regex: /^(([1-9][0-9]*)|0)/},
     { category:"Value",type: 'String-content', regex: /^"([\s"a-zA-Z0-9][a-zA-Z0-9_]*)*"/ },
-    { category:"Value",type: 'Boolean-value', regex: /^(true|false)+/ },
-    { category:"Symbol",type: 'Operator-Inc-Dec', regex: /^((\+){2})|((\-){2})/ },
-    { category:"Symbol",type: 'Initial-Parentheses', regex: /^\(/ },
-    { category:"Symbol",type: 'Final-Parentheses', regex: /^\)/ },
-    { category:"Symbol",type: 'Initial-Square-Bracket', regex: /^\{/ },
-    { category:"Symbol",type: 'Final-Square-Bracket', regex: /^\}/ },
+    { category:"Reservated",type: 'Boolean-value', regex: /^(true|false)+/ },
+    { category:"Operator",type: 'Operator-Inc-Dec', regex: /^((\+){2})|((\-){2})/ },
+    { category:"Parentheses",type: 'Initial-Parentheses', regex: /^\(/ },
+    { category:"Parentheses",type: 'Final-Parentheses', regex: /^\)/ },
+    { category:"Square-Bracket",type: 'Initial-Square-Bracket', regex: /^\{/ },
+    { category:"Square-Bracket",type: 'Final-Square-Bracket', regex: /^\}/ },
     { category:"Symbol",type: 'Comma', regex: /^,/ },
     { category:"Symbol",type: 'Semicolon', regex: /^;/ },
-    { category:"Symbol",type: 'Plus-Operator', regex: /^(\+){1}/ },
-    { category:"Symbol",type: 'Minus-Operator', regex: /^-/ },
-    { category:"Symbol",type: 'Asterisk', regex: /^\*/ },
-    { category:"Symbol",type: 'Diagonal-Divition', regex: /^\// },
-    { category:"Symbol",type: 'Equal', regex: /^=/ },
+    { category:"Arithmetic",type: 'Plus-Operator', regex: /^(\+){1}/ },
+    { category:"Arithmetic",type: 'Minus-Operator', regex: /^-/ },
+    { category:"Arithmetic",type: 'Asterisk', regex: /^\*/ },
+    { category:"Arithmetic",type: 'Diagonal-Divition', regex: /^\// },
+    { category:"Operator",type: 'Equal', regex: /^=/ },
+    { category:"Operator",type: 'Less-Than', regex: /^</ },
+    { category:"Operator",type: 'More-Than', regex: /^>/ },
 ];
 
 
@@ -52,6 +52,7 @@ function tokenize(sourceCode) {
 
     return tokenizedCode;
 }
+
 
 function counting(tokenizedCode) {
     const categoryCount = {};
@@ -92,7 +93,6 @@ function validateString() {
         const cell2 = row.insertCell(1);
         const cell3 = row.insertCell(2);
 
-        // Asigna valores a las celdas
         cell1.textContent = token.category;
         cell2.textContent = token.type;
         cell3.textContent = token.value;
