@@ -10,7 +10,7 @@ const tokens = [
     { category:"Reservated",type: 'If_Struct', regex: /^if/ },
     { category:"Reservated",type: 'For_Struct', regex: /^for/ },
     { category:"Value",type: 'Number_Content', regex: /^(([1-9][0-9]*)|0)/},
-    { category:"Value",type: 'String_Content', regex: /^"([\s"a-zA-Z0-9][a-zA-Z0-9_]+)+"/ },
+    { category:"Value",type: 'String_Content', regex: /^"([\s"a-zA-Z0-9][a-zA-Z0-9_]*)+"/ },
     { category:"Reservated",type: 'Boolean_Value', regex: /^(true|false)+/ },
     { category:"Operator",type: 'Operator_Inc_Dec', regex: /^((\+){2})|((\-){2})/ },
     { category:"Parentheses",type: 'Initial_Parentheses', regex: /^\(/ },
@@ -215,8 +215,7 @@ function parseProgram(tokens1) {
         consume('Initial_Square_Bracket');
         parseProgram(tokens1);
         consume('Final_Square_Bracket');
-       
-        if (tokens1[currentTokenIndex]!=undefined && tokens1[currentTokenIndex].value =='Else_Struct') {
+        if (tokens1[currentTokenIndex]!=undefined && tokens1[currentTokenIndex].type =='Else_Struct') {     
             elseif = true;
             
             consume('Else_Struct');
