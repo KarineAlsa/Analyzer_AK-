@@ -1,6 +1,6 @@
 const tokens = [
     { category:"Value",type: 'If_Content', regex: /^[a-zA-Z_]+([a-zA-Z0-9_]*)\s*((==|<=|>=|!|<|>){1})\s*(([a-zA-Z_]+([a-zA-Z0-9_]*))|([1-9][0-9]*)|0)/ },
-    { category:"Assignation",type: 'Identificator', regex: /^(?!int\b)(?!string\b)(?!for\b)(?!boolean\b)(?!else\b)(?!if\b)(?!func\b)(?!true\b)(?!false\b)[a-zA-Z]([a-zA-Z0-9_]*)/ },
+    { category:"Assignation",type: 'Identificator', regex: /^(?!int\b)(?!string\b)(?!for\b)(?!boolean\b)(?!else\b)(?!if\b)(?!func\b)(?!true\b)(?!false\b)(?!print\b)(?!call\b)[a-zA-Z]([a-zA-Z0-9_]*)/ },
     { category:"Reservated",type: 'Variable_Int', regex: /^(int)/ },
     { category:"Reservated",type: 'Variable_String', regex: /^(string)/ },
     { category:"Reservated",type: 'Variable_Boolean', regex: /^(boolean)/ },
@@ -9,6 +9,8 @@ const tokens = [
     { category:"Reservated",type: 'Function_Declaration', regex: /^func/ },
     { category:"Reservated",type: 'If_Struct', regex: /^if/ },
     { category:"Reservated",type: 'For_Struct', regex: /^for/ },
+    { category:"Reservated",type: 'Print_Content', regex: /^(print)/},
+    { category:"Reservated",type: 'Func_Call', regex: /^(call)/},
     { category:"Value",type: 'Number_Content', regex: /^(([1-9][0-9]*)|0)/},
     { category:"Value",type: 'String_Content', regex: /^"([\s"a-zA-Z0-9][a-zA-Z0-9_]*)+"/ },
     { category:"Reservated",type: 'Boolean_Value', regex: /^(true|false)+/ },
@@ -25,6 +27,7 @@ const tokens = [
     { category:"Operator",type: 'More_Equal', regex: /^>=/ },
     { category:"Operator",type: 'More_Equal', regex: /^<=/ },
     { category:"Operator",type: 'Less_Than', regex: /^</ },
+    { category:"Operator",type: 'More_Than', regex: /^>/ },
     { category:"Operator",type: 'More_Than', regex: /^>/ },
 ];
 
@@ -61,6 +64,7 @@ function tokenize(sourceCode) {
 
     return tokenizedCode;
 }
+console.log
 
 
 function counting(tokenizedCode) {
@@ -102,7 +106,7 @@ function parseProgram(tokens1) {
             currentTokenIndex++;
             return value;
         }else {
-            if(type==="if"||type==="string"||type==="int"||type==="func"||type==="boolean"||type==="else"||type==="for") {
+            if(type==="if"||type==="string"||type==="int"||type==="func"||type==="boolean"||type==="else"||type==="for"||type==="print") {
                 let currentTokenIndexRep = currentTokenIndex;
                 currentTokenIndex = 0;
                 Swal.fire({
@@ -174,6 +178,15 @@ function parseProgram(tokens1) {
         consume(type);
     }
 
+    function parseFunctionCall() {
+        consume("Func_Call")
+        consume('String_Content');
+        consume('Initial_Parentheses');
+        parseParametros();
+        consume('Final_Parentheses');
+        consume('Semicolon');
+    }
+
     function parseFunction() {
         
         consume('Function_Declaration');
@@ -188,13 +201,16 @@ function parseProgram(tokens1) {
 
     function parseParametros() {
         
-        while (tokens1[currentTokenIndex] &&tokens1[currentTokenIndex].type === 'Identificator') {   
-            consume('Identificator');
+        while (tokens1[currentTokenIndex] &&(tokens1[currentTokenIndex].type === 'Identificator' || tokens1[currentTokenIndex].type === 'Number_Content' || 
+                                            tokens1[currentTokenIndex].type === 'String_Content' || tokens1[currentTokenIndex].type === 'Boolean_Value')
+            ){   
+            consume(tokens1[currentTokenIndex].type);
             if (tokens1[currentTokenIndex].type !== 'Comma') {
                 
                 break;
             }
-            if(tokens1[currentTokenIndex+1].type !="Identificator"){
+            if(tokens1[currentTokenIndex+1].type !== 'Identificator' && tokens1[currentTokenIndex+1].type !== 'Number_Content' && 
+            tokens1[currentTokenIndex+1].type !== 'String_Content' && tokens1[currentTokenIndex+1].type !== 'Boolean_Value'){
                 throw new Error("Error: Coma no esperada al final de la lista de parámetros.");
             }
             consume('Comma');
@@ -276,6 +292,21 @@ function parseProgram(tokens1) {
 
         
     }
+
+    function parsePrint() {
+        consume('Print_Content')
+        if (tokens1[currentTokenIndex].type === 'Identificator'){
+            consume('Identificator')
+
+        }else if (tokens1[currentTokenIndex].type === 'Number_Content'){
+            consume('Number_Content')
+        }else if (tokens1[currentTokenIndex].type === 'String_Content'){
+            consume('String_Content')
+        }else if (tokens1[currentTokenIndex].type === 'Boolean_Value'){
+            consume('Boolean_Value')
+        }
+        consume('Semicolon')
+    }
     
 
 
@@ -294,6 +325,10 @@ function parseProgram(tokens1) {
             break;
         } else if (tokens1[tokens1.length-1].type === 'Else_Struct' && conditional ==true){
             break;
+        } else if(tokens1[currentTokenIndex].type === 'Print_Content'){
+            parsePrint();
+        } else if(tokens1[currentTokenIndex].type === 'Func_Call'){
+            parseFunctionCall();
         }
         else {
             Swal.fire({
