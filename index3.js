@@ -36,7 +36,7 @@ function tokenize(sourceCode) {
     let match;
 
     while (sourceCode) {
-        
+
         let foundMatch = false;
 
         for (const { category, type, regex } of tokens) {
@@ -53,9 +53,9 @@ function tokenize(sourceCode) {
                 break;
             }
         }
-        
+
         if (!foundMatch) {
-            
+
             const errorValue = sourceCode.trim().split(/\s+/)[0];
             tokenizedCode.push({ category: "ERROR", type: "ERROR", value: errorValue });
             sourceCode = sourceCode.slice(errorValue.length).trim();
@@ -92,10 +92,10 @@ let func = false;
 let cicle = false;
 let resultado;
 function parseProgram(tokens1) {
-    
+
     function consume(type) {
         const token = tokens1[currentTokenIndex];
-       
+
         if (token && token.type == type) {
             console.log(token.type==type)
             const value = token.value;
@@ -118,7 +118,7 @@ function parseProgram(tokens1) {
                 })
                 resultado.textContent =`expresión ${type} después de ${tokens1[currentTokenIndexRep-1].value}`;
                 resultado.style.color = 'Red';
-                
+
                 throw new Error(`Error de sintaxis: Se esperaba un token de tipo expresión ${type} después de ${tokens1[currentTokenIndexRep-1].value}`);
             }else{
                 let currentTokenIndexRep = currentTokenIndex;
@@ -132,14 +132,14 @@ function parseProgram(tokens1) {
                 })
                 resultado.textContent =`tipo ${type} después de ${tokens1[currentTokenIndexRep-1].value}`;
                 resultado.style.color = 'Red';
-                
+
                 throw new Error(`Error de sintaxis: Se esperaba un token de tipo ${type} después de ${tokens1[currentTokenIndexRep-1].value}`);
             }
         }
     }
 
     function getType(value) {
-        
+
         if(value == "int"){
             return "Number_Content"
         }
@@ -152,7 +152,7 @@ function parseProgram(tokens1) {
     }
 
     function getVar(value) {
-        
+
         if(value == "int"){
             return "Variable_Int"
         }
@@ -188,7 +188,7 @@ function parseProgram(tokens1) {
     }
 
     function parseFunction() {
-        
+
         consume('Function_Declaration');
         consume('String_Content');
         consume('Initial_Parentheses');
@@ -200,17 +200,15 @@ function parseProgram(tokens1) {
     }
 
     function parseParametros() {
-        
-        while (tokens1[currentTokenIndex] &&(tokens1[currentTokenIndex].type === 'Identificator' || tokens1[currentTokenIndex].type === 'Number_Content' || 
-                                            tokens1[currentTokenIndex].type === 'String_Content' || tokens1[currentTokenIndex].type === 'Boolean_Value')
-            ){   
+
+        while (tokens1[currentTokenIndex] &&(tokens1[currentTokenIndex].type === 'Identificator')
+            ){
             consume(tokens1[currentTokenIndex].type);
             if (tokens1[currentTokenIndex].type !== 'Comma') {
-                
+
                 break;
             }
-            if(tokens1[currentTokenIndex+1].type !== 'Identificator' && tokens1[currentTokenIndex+1].type !== 'Number_Content' && 
-            tokens1[currentTokenIndex+1].type !== 'String_Content' && tokens1[currentTokenIndex+1].type !== 'Boolean_Value'){
+            if(tokens1[currentTokenIndex+1].type !== 'Identificator'){
                 throw new Error("Error: Coma no esperada al final de la lista de parámetros.");
             }
             consume('Comma');
@@ -231,9 +229,9 @@ function parseProgram(tokens1) {
         consume('Initial_Square_Bracket');
         parseProgram(tokens1);
         consume('Final_Square_Bracket');
-        if (tokens1[currentTokenIndex]!=undefined && tokens1[currentTokenIndex].type =='Else_Struct') {     
+        if (tokens1[currentTokenIndex]!=undefined && tokens1[currentTokenIndex].type =='Else_Struct') {
             elseif = true;
-            
+
             consume('Else_Struct');
             consume('Initial_Square_Bracket');
             parseProgram(tokens1);
@@ -255,20 +253,20 @@ function parseProgram(tokens1) {
         consume('Initial_Square_Bracket');
         parseProgram(tokens1);
         consume('Final_Square_Bracket');
-        
+
     }
     function parseInicial() {
         consume('Variable_Int')
         consume('Identificator')
         consume('Equal')
-        
+
         if (tokens1[currentTokenIndex].type === 'Identificator'){
             consume('Identificator')
 
         }else if (tokens1[currentTokenIndex].type === 'Number_Content'){
             consume('Number_Content')
         }else{
-            
+
             Swal.fire({
                 position: 'center',
                 icon: 'error',
@@ -278,36 +276,35 @@ function parseProgram(tokens1) {
             })
             throw new Error(`Error de sintaxis: Se esperaba un token de asignación después de ${tokens1[currentTokenIndex-1].value}`);
         }
-        
+
     }
 
     function parseCondicion() {
         indexChange.push(currentTokenIndex)
         consume('If_Content')
-        
+
     }
     function parseActualizacion() {
         consume('Identificator')
         consume('Operator_Inc_Dec')
 
-        
+
     }
 
     function parsePrint() {
         consume('Print_Content')
-        if (tokens1[currentTokenIndex].type === 'Identificator'){
-            consume('Identificator')
+        if (tokens1[currentTokenIndex].type === 'Boolean_Value'){
+            consume('Boolean_Value')
 
         }else if (tokens1[currentTokenIndex].type === 'Number_Content'){
             consume('Number_Content')
         }else if (tokens1[currentTokenIndex].type === 'String_Content'){
             consume('String_Content')
-        }else if (tokens1[currentTokenIndex].type === 'Boolean_Value'){
-            consume('Boolean_Value')
+        }else{
+            consume('Identificator')
         }
         consume('Semicolon')
     }
-    
 
 
 
@@ -359,15 +356,15 @@ function validateString() {
     console.log(tokens1);
     console.log(cadena);
     var count = counting(tokens1)
-    
+
     parseProgram(tokens1);
-    
+
     tokens1=cleanProgram(tokens1);
     cleaning=false
     if(count.Square_Bracket%2!=0 && count.hasOwnProperty("Square_Bracket")){
         resultado.textContent =`Llave restante.`;
         resultado.style.color = 'Red';
-    
+
         Swal.fire({
             position: 'center',
             icon: 'error',
@@ -377,7 +374,32 @@ function validateString() {
         })
     }else{
         resultado.textContent =`LISTO.`;
-    resultado.style.color = 'Green';
+        resultado.style.color = 'Green';
+        console.log("string be:\n", cadena)
+        code = translate(cadena.replace(/\s+/g, ''))
+        console.log(code)
+        const outputDiv = document.getElementById('codejs');
+
+        // Capturar la salida de console.log y los errores
+        let capturedOutput = '';
+        let errorMessage = '';
+        console.log = function(text) {
+            capturedOutput += text + '\n';
+        };
+        try {
+            eval(code);
+        } catch (error) {
+            errorMessage = error.message;
+        }
+
+        // Mostrar la salida y los errores en el div
+        if (errorMessage !== '') {
+            outputDiv.textContent = errorMessage;
+        } else {
+            outputDiv.textContent = capturedOutput;
+        }
+
+
     Swal.fire({
         position: 'center',
         icon: 'success',
@@ -403,7 +425,7 @@ function cleanProgram(tokens1){
     cleaning=true
     var newT=tokens1
     indexChange.forEach(index => {
-        
+
         newT=tokens1.concat(tokenize(tokens1.splice(index,1)[0].value))
     });
     return newT

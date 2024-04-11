@@ -24,7 +24,7 @@ background: linear-gradient(to right, #7BC6CC, #BE93C5); /* W3C, IE 10+/ Edge, F
     align-items: center;
     .container{
         width: 80%;
-        height: 72vh;
+        height: 88vh;
         background-color: #fffdfd;
         border-radius: 4px;
         border-color: transparent;
@@ -156,7 +156,9 @@ h3{
     
 }
 .container22{
-    margin: 0;
+    display: flex;
+    justify-content: space-around;
+    margin: 0 ;
     width: 80%;
     height: 100%;
     background-color: #fffdfd;
@@ -164,4 +166,23 @@ h3{
     border-color: transparent;
     box-shadow: 2px;
     margin-bottom: 1%;
+}
+
+.datosTest{
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+    height: 100%;
+    background-color: #fffdfd;
+    border-radius: 4px;
+    border-color: transparent;
+    box-shadow: 2px;
+    margin-bottom: 1%;
+    margin-top: -150px;
+
+}
+
+textarea{
+    width: 450px;
+    height: 100px;
 }
